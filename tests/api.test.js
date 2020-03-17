@@ -150,6 +150,8 @@ describe('jwt api', () => {
             company_token: 'test',
             device_id: 'uuid',
             device_model: 'test',
+            framework: '111',
+            version: '2.0',
           },
         });
       expect(res).have.status(200);

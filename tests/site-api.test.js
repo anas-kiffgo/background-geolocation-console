@@ -83,7 +83,12 @@ describe('site api', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({
           location,
-          device: { model: 'test', uuid: 'uuid' },
+          device: {
+            framework: '111',
+            model: 'test',
+            uuid: 'uuid',
+            version: '2.0',
+          },
           company_token: 'test',
         });
       expect(res).have.status(200);
@@ -101,6 +106,8 @@ describe('site api', () => {
             company_token: 'test',
             device_id: 'uuid',
             device_model: 'test',
+            framework: '111',
+            version: '2.0',
           },
         }]);
       expect(res).have.status(200);
@@ -126,7 +133,12 @@ describe('site api', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({
           location: [location, location2],
-          device: { model: 'test', uuid: 'uuid' },
+          device: {
+            model: 'test',
+            uuid: 'uuid',
+            framework: '111',
+            version: '2.0',
+          },
         });
       expect(res).have.status(200);
       expect(res).to.be.json;

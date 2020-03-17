@@ -280,21 +280,24 @@ router.post('/jwt', async (req, res) => {
   const { org } = req.body || {};
 
   try {
-    const { id } = await findOne({ org }) || {};
+    let id;
+    if (!isAdmin()) {
+      ({ id } = await findOne({ org }) || {});
 
-    if (!id) {
-      return res.status(401).send({ org, error: 'Org not found' });
+      if (!id) {
+        return res.status(401).send({ org, error: 'Org not found' });
+      }
     }
 
     const jwtInfo = {
-      companyId: id,
-      org,
+      companyId: id || 0,
+      org: org || 'admin',
     };
     const accessToken = sign(jwtInfo);
     return res.send({
       access_token: accessToken,
       token_type: 'Bearer',
-      org,
+      org: 'admin',
     });
   } catch (e) {
     console.error('v1', '/jwt', e);

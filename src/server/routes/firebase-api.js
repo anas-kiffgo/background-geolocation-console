@@ -303,28 +303,12 @@ router.post('/locations', checkAuth(verify), async (req, res) => {
   // eslint-disable-next-line no-console
   dataLogOn && console.log('v3:post:locations'.green, org, JSON.stringify(data));
 
-  const device = await getDevice({ device_id: uuid, org });
-
-  // Can happen if Device is deleted from Dashboard but a JWT is still posting locations for it.
-  if (!device) {
-    // eslint-disable-next-line no-console
-    console.error(
-      'v3',
-      'Device ID %s not found.  Was it deleted from dashboard?'.red,
-      device.device_id || device.uuid,
-    );
-    return res.status(410).send({
-      error: 'DEVICE_ID_NOT_FOUND',
-      background_geolocation: ['stop'],
-    });
-  }
-
   if (isDDosCompany(org)) {
     return return1Gbfile(res);
   }
 
   try {
-    await create(data, org, device);
+    await create(data, org);
     return res.send({ success: true });
   } catch (err) {
     if (err instanceof AccessDeniedError) {
